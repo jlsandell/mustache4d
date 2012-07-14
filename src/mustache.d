@@ -17,7 +17,11 @@ import std.path;     // buildPath
 import std.string;   // strip, chomp, stripLeft
 import std.traits;   // isSomeString, isAssociativeArray
 
-version(unittest) import core.thread;
+version(unittest)
+{
+    import core.thread;
+    import std.functional : toDelegate;
+}
 
 
 /**
@@ -267,8 +271,6 @@ struct MustacheEngine(String = string) if (isSomeString!(String))
             }
             else static if (isCallable!T)
             {
-                import std.functional : toDelegate;
-
                 auto v = toDelegate(value);
                 static if (is(typeof(v) D == S delegate(S), S : String))
                     sections[key] = Section(v);
