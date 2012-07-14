@@ -33,7 +33,7 @@ doc:
 	$(DMD) $(DDOCFLAGS) $(SRCS)
 
 clean:
-	rm $(DOCS) $(LIB)
+	rm -f $(DOCS) $(LIB)
 
 MAIN_FILE = "empty_mustache_unittest.d"
 
