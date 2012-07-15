@@ -533,6 +533,12 @@ struct MustacheEngine(String = string) if (isSomeString!(String))
         {
             option_.handler = handler;
         }
+
+        /// ditto
+        void handler(string function(string) handler)
+        {
+            option_.handler = toDelegate(handler);
+        }
     }
 
     /**
