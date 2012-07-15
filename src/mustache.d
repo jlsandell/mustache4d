@@ -341,6 +341,13 @@ struct MustacheEngine(String = string) if (isSomeString!(String))
             if (result !is null)
                 return *result;
 
+            // Allows for callable variables.
+            // e.g., context["func"] = (string i) { return "stuff";};
+            auto section_ = key in sections;
+
+            if (section_ !is null && section_.type == SectionType.func)
+                return section_.func(key);
+
             if (parent is null)
                 return handler is null ? null : handler()(key);
 
@@ -419,6 +426,22 @@ struct MustacheEngine(String = string) if (isSomeString!(String))
 
             context["Wrapped"] = func;
             assert(context.fetchFunc("Wrapped")("Ritsu") == func("Ritsu"));
+
+            MustacheEngine!(String) m;
+            auto render = &m.renderString;
+
+            // Makes unittest failures easier to decipher
+            auto expected = "<b>Wrapped</b>";
+            auto result = render("{{& Wrapped }}", context);
+
+            assert(result == expected, "Callable var failed: expected '" ~ expected ~ "' but got '" ~ result ~ "'");
+
+            // ditto...
+            expected = "<b>Ritsu</b>";
+            result = render("{{# Wrapped }}Ritsu{{/ Wrapped }}", context);
+
+            assert(result == expected, "Lambda section failed: expected '" ~ expected ~ "' but got '" ~ result ~ "'");
+
         }
         { // handler
             Handler fixme = delegate String(String) { return "FIXME"; };
