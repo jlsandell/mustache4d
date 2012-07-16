@@ -16,12 +16,9 @@ import std.file;     // read, timeLastModified
 import std.path;     // buildPath
 import std.string;   // strip, chomp, stripLeft
 import std.traits;   // isSomeString, isAssociativeArray
+import std.functional : toDelegate;
 
-version(unittest)
-{
-    import core.thread;
-    import std.functional : toDelegate;
-}
+version(unittest) import core.thread;
 
 
 /**
@@ -29,9 +26,9 @@ version(unittest)
  */
 class MustacheException : Exception
 {
-    this(string messaage)
+    this(string message)
     {
-        super(messaage);
+        super(message);
     }
 }
 
